@@ -1,0 +1,725 @@
+{
+  "$schema": "../../schema/curriculum.schema.json",
+  "version": 1,
+  "worlds": [
+    {
+      "id": 1,
+      "codename": "CORE TELEMETRY",
+      "title": "Data Types & Variables",
+      "concepts": ["str", "int", "float", "bool", "type casting", "dynamic assignment"],
+      "theme": "The mainframe is cold. Power up its cores and route the raw signals pouring in from the grid.",
+      "accent": "cyan"
+    },
+    {
+      "id": 2,
+      "codename": "DECISION MATRIX",
+      "title": "Control Flow & Logic",
+      "concepts": ["if / elif / else", "and / or / not", "comparison operators"],
+      "theme": "Every packet hits a fork. Teach the matrix to pick routes, filter junk data and run security checks.",
+      "accent": "emerald"
+    },
+    {
+      "id": 3,
+      "codename": "DATA VAULTS",
+      "title": "Data Structures",
+      "concepts": ["lists", "dicts", "tuples", "sets", "indexing & slicing", "key lookups"],
+      "theme": "Payloads, sensor logs and entity records are piling up in the vaults. Parse them before they overflow.",
+      "accent": "amber"
+    },
+    {
+      "id": 4,
+      "codename": "AUTOMATION ENGINES",
+      "title": "Loops & Iteration",
+      "concepts": ["for", "while", "range()", "break / continue"],
+      "theme": "Manual work doesn't scale. Spin up engines that batch-process records and retry failed links on their own.",
+      "accent": "magenta"
+    },
+    {
+      "id": 5,
+      "codename": "MODULAR SYSTEMS",
+      "title": "Functions & Scope",
+      "concepts": ["def", "arguments", "return", "default parameters", "scope"],
+      "theme": "Package your logic into reusable engine modules and API handlers the whole grid can call.",
+      "accent": "violet"
+    }
+  ],
+  "levels": [
+    {
+      "id": "w1-l1",
+      "world": 1,
+      "order": 1,
+      "mechanic": "live_console",
+      "title": "Power On",
+      "concept": "Variables & the four core types",
+      "tags": ["variables", "str", "int", "float", "bool"],
+      "xp": 50,
+      "briefing": "Operator, the mainframe is dark. Its boot checklist needs four readings stored in named registers before the cores will spin up.",
+      "objective": "Create status (text ONLINE), active_cores (whole number 4), core_temp (decimal 36.6) and shields_up (True). Then print status.",
+      "starterCode": "# Mainframe boot checklist\n# status       -> the text ONLINE\n# active_cores -> the whole number 4\n# core_temp    -> the decimal 36.6\n# shields_up   -> the boolean True\n# Finally, print status.\n\n",
+      "solution": "status = \"ONLINE\"\nactive_cores = 4\ncore_temp = 36.6\nshields_up = True\nprint(status)\n",
+      "tests": [
+        { "id": "status", "kind": "variable_equals", "label": "status holds the text \"ONLINE\"", "name": "status", "expected": "ONLINE", "failHint": "Text needs quotes: \"ONLINE\"." },
+        { "id": "cores-type", "kind": "variable_type", "label": "active_cores is an int", "name": "active_cores", "expected": "int", "failHint": "Write 4 without quotes or a decimal point." },
+        { "id": "cores", "kind": "variable_equals", "label": "active_cores equals 4", "name": "active_cores", "expected": 4 },
+        { "id": "temp-type", "kind": "variable_type", "label": "core_temp is a float", "name": "core_temp", "expected": "float" },
+        { "id": "temp", "kind": "variable_equals", "label": "core_temp equals 36.6", "name": "core_temp", "expected": 36.6 },
+        { "id": "shields", "kind": "variable_equals", "label": "shields_up is True", "name": "shields_up", "expected": true, "failHint": "Booleans are True / False with a capital letter and no quotes." },
+        { "id": "out", "kind": "stdout_equals", "label": "Console shows ONLINE", "expected": "ONLINE" }
+      ],
+      "hints": [
+        "A variable is a name, an equals sign, and a value: name = value.",
+        "Text goes in quotes (\"ONLINE\"), numbers don't (4, 36.6), and booleans are written True or False.",
+        "print(status) prints the value stored in status — no quotes around the name."
+      ],
+      "careers": {
+        "dataScience": "Every DataFrame column has a dtype (int64, float64, bool, object). Choosing the right one controls memory use and which maths is allowed.",
+        "softwareEngineering": "Config flags, counters and thresholds are typed variables. Type hints like `retries: int` start right here.",
+        "webDevelopment": "Request params arrive as strings, but your database expects ints and bools. Knowing the core types is the first step in validating input."
+      }
+    },
+    {
+      "id": "w1-l2",
+      "world": 1,
+      "order": 2,
+      "mechanic": "code_repair",
+      "title": "Signal Converter",
+      "concept": "Type casting with int() and str()",
+      "tags": ["type casting", "int", "str"],
+      "xp": 50,
+      "briefing": "The antenna sends raw_signal as TEXT. The booster adds 8 to it, but you can't add a number to text. Repair the converter.",
+      "objective": "Fill the blanks so the text signal becomes a number, gets boosted, and is printed as part of a message.",
+      "template": "boost = 8\nsignal = {{cast_in}}(raw_signal) + boost\nprint(\"Signal strength: \" + {{cast_out}}(signal))\n",
+      "blanks": [
+        { "id": "cast_in", "answers": ["int"] },
+        { "id": "cast_out", "answers": ["str"] }
+      ],
+      "tokenBank": ["int", "str", "float", "bool", "len"],
+      "scenarios": [
+        { "id": "a", "label": "raw_signal = \"42\"", "inputs": { "raw_signal": "42" } },
+        { "id": "b", "label": "raw_signal = \"7\"", "inputs": { "raw_signal": "7" } }
+      ],
+      "tests": [
+        { "id": "out-a", "kind": "stdout_equals", "label": "Prints \"Signal strength: 50\"", "scenario": "a", "expected": "Signal strength: 50", "failHint": "float() would give 50.0 — the spec wants a whole number." },
+        { "id": "type", "kind": "variable_type", "label": "signal is an int", "scenario": "a", "name": "signal", "expected": "int" },
+        { "id": "out-b", "kind": "stdout_equals", "label": "Works for other signals too", "scenario": "b", "expected": "Signal strength: 15", "hidden": true }
+      ],
+      "hints": [
+        "\"42\" + 8 is an error: text and numbers don't mix with +.",
+        "int(\"42\") turns text into the number 42. str(50) turns a number back into text \"50\"."
+      ],
+      "careers": {
+        "dataScience": "CSV columns often load as strings. `df[\"price\"].astype(float)` is the same casting idea at scale.",
+        "softwareEngineering": "Parsing env vars and CLI args means casting: `int(os.environ[\"PORT\"])`.",
+        "webDevelopment": "Query strings like ?page=2 always arrive as text. Cast before you do arithmetic or database lookups."
+      }
+    },
+    {
+      "id": "w1-l3",
+      "world": 1,
+      "order": 3,
+      "mechanic": "predict_output",
+      "title": "Telemetry Readout",
+      "concept": "Operators behave differently per type",
+      "tags": ["str", "operators"],
+      "xp": 50,
+      "briefing": "A junior operator multiplied a voltage reading and the dashboard went haywire. Predict what the console showed.",
+      "objective": "What does this program print?",
+      "snippet": "voltage = \"12\"\nreading = voltage * 3\nprint(reading)\n",
+      "choices": ["36", "121212", "TypeError", "12 12 12"],
+      "answerIndex": 1,
+      "explanation": "voltage is the TEXT \"12\", not the number 12. Multiplying a string by an int repeats it: \"12\" * 3 == \"121212\". Use int(voltage) * 3 to get 36.",
+      "hints": [
+        "Look closely at the quotes on line 1.",
+        "For strings, * means \"repeat\" — try \"ab\" * 2 in your head."
+      ],
+      "careers": {
+        "dataScience": "A numeric column silently loaded as text will 'multiply' into nonsense. Always check dtypes after loading data.",
+        "softwareEngineering": "Operator overloading: + and * mean different things for str, list and int. Knowing this prevents subtle bugs.",
+        "webDevelopment": "Form values are strings. \"5\" * 2 giving \"55\" is a classic checkout-total bug."
+      }
+    },
+    {
+      "id": "w1-l4",
+      "world": 1,
+      "order": 4,
+      "mechanic": "live_console",
+      "title": "Packet Loss Ratio",
+      "concept": "Casting, float division and round()",
+      "tags": ["type casting", "float", "round", "f-strings"],
+      "xp": 75,
+      "briefing": "The relay reports how many packets it sent and lost, but as TEXT. Command wants the loss rate as a percentage, rounded to 2 decimals.",
+      "objective": "Convert packets_sent and packets_lost to numbers, compute loss_rate = lost / sent * 100 rounded to 2 places, and print: Loss rate: <loss_rate>%",
+      "starterCode": "# Sensor inputs (TEXT): packets_sent, packets_lost\n# 1. Convert both to int.\n# 2. loss_rate = lost / sent * 100, rounded to 2 decimals.\n# 3. Print:  Loss rate: <loss_rate>%\n\n",
+      "solution": "sent = int(packets_sent)\nlost = int(packets_lost)\nloss_rate = round(lost / sent * 100, 2)\nprint(f\"Loss rate: {loss_rate}%\")\n",
+      "scenarios": [
+        { "id": "a", "label": "sent \"1500\", lost \"45\"", "inputs": { "packets_sent": "1500", "packets_lost": "45" } },
+        { "id": "b", "label": "sent \"800\", lost \"12\"", "inputs": { "packets_sent": "800", "packets_lost": "12" } },
+        { "id": "c", "label": "sent \"3\", lost \"1\"", "inputs": { "packets_sent": "3", "packets_lost": "1" } }
+      ],
+      "tests": [
+        { "id": "type", "kind": "variable_type", "label": "loss_rate is a float", "scenario": "a", "name": "loss_rate", "expected": "float" },
+        { "id": "value", "kind": "variable_equals", "label": "loss_rate is 3.0", "scenario": "a", "name": "loss_rate", "expected": 3.0 },
+        { "id": "out-a", "kind": "stdout_equals", "label": "Prints \"Loss rate: 3.0%\"", "scenario": "a", "expected": "Loss rate: 3.0%" },
+        { "id": "out-b", "kind": "stdout_equals", "label": "Second relay reads 1.5%", "scenario": "b", "expected": "Loss rate: 1.5%" },
+        { "id": "out-c", "kind": "stdout_equals", "label": "Rounds repeating decimals", "scenario": "c", "expected": "Loss rate: 33.33%", "hidden": true, "failHint": "1 / 3 * 100 is 33.33333333333333 — round(x, 2) trims it to 33.33." }
+      ],
+      "hints": [
+        "int(packets_sent) turns the text into a number you can divide.",
+        "round(value, 2) keeps two decimal places.",
+        "An f-string mixes text and values: f\"Loss rate: {loss_rate}%\""
+      ],
+      "careers": {
+        "dataScience": "Rates and percentages are everyday metrics: conversion rate, churn, error rate. Rounding is for display; keep full precision in calculations.",
+        "softwareEngineering": "Monitoring dashboards (SLOs, error budgets) compute exactly this kind of ratio from raw counters.",
+        "webDevelopment": "Formatting numbers for display with f-strings is the backend half of every analytics widget."
+      }
+    },
+
+    {
+      "id": "w2-l1",
+      "world": 2,
+      "order": 1,
+      "mechanic": "code_repair",
+      "title": "Route Fork",
+      "concept": "if / elif / else chains",
+      "tags": ["if", "elif", "else", "comparison"],
+      "xp": 75,
+      "briefing": "A courier drone reports its fuel level. With 50 or more it takes the highway, with 20 or more the backroad, otherwise it must refuel. The router code is damaged.",
+      "objective": "Repair the decision chain so every fuel level picks the right route.",
+      "template": "if fuel {{cmp}} 50:\n    route = \"highway\"\n{{elif_kw}} fuel >= 20:\n    route = \"backroad\"\n{{else_kw}}:\n    route = \"refuel\"\nprint(\"Route:\", route)\n",
+      "blanks": [
+        { "id": "cmp", "answers": [">="] },
+        { "id": "elif_kw", "answers": ["elif"] },
+        { "id": "else_kw", "answers": ["else"] }
+      ],
+      "tokenBank": [">=", ">", "<", "==", "elif", "else", "if", "else if"],
+      "scenarios": [
+        { "id": "full", "label": "fuel = 80", "inputs": { "fuel": 80 } },
+        { "id": "edge", "label": "fuel = 50", "inputs": { "fuel": 50 } },
+        { "id": "mid", "label": "fuel = 35", "inputs": { "fuel": 35 } },
+        { "id": "low", "label": "fuel = 5", "inputs": { "fuel": 5 } }
+      ],
+      "tests": [
+        { "id": "full", "kind": "stdout_equals", "label": "fuel 80 → highway", "scenario": "full", "expected": "Route: highway" },
+        { "id": "edge", "kind": "stdout_equals", "label": "fuel 50 → highway (exactly 50 counts)", "scenario": "edge", "expected": "Route: highway", "failHint": "\"50 or more\" includes 50 itself." },
+        { "id": "mid", "kind": "stdout_equals", "label": "fuel 35 → backroad", "scenario": "mid", "expected": "Route: backroad" },
+        { "id": "low", "kind": "stdout_equals", "label": "fuel 5 → refuel", "scenario": "low", "expected": "Route: refuel" }
+      ],
+      "hints": [
+        "Python checks the branches top to bottom and runs only the first one that is True.",
+        "\"Or more\" means greater-than-or-equal: >=",
+        "Python's \"else if\" is spelled elif."
+      ],
+      "careers": {
+        "dataScience": "Binning a value into categories (low / mid / high) is a classic feature-engineering step — pandas' `pd.cut` does it in bulk.",
+        "softwareEngineering": "Feature flags, retry policies and routing rules are all if/elif chains at heart.",
+        "webDevelopment": "Choosing which template, redirect or HTTP status to return is control flow in every request handler."
+      }
+    },
+    {
+      "id": "w2-l2",
+      "world": 2,
+      "order": 2,
+      "mechanic": "live_console",
+      "title": "Packet Filter",
+      "concept": "Combining conditions with and / not",
+      "tags": ["and", "not", "comparison", "chained comparison"],
+      "xp": 75,
+      "briefing": "Junk packets are flooding the matrix. A packet passes only if its size is 64–1500 bytes (inclusive), its checksum is valid, and its source is not \"unknown\".",
+      "objective": "Fix the accepted = ... line so it is True only for valid packets.",
+      "starterCode": "# Sensor inputs: packet_size (int), checksum_ok (bool), source (str)\n# A packet is valid only when ALL of these hold:\n#   - packet_size is between 64 and 1500 (inclusive)\n#   - checksum_ok is True\n#   - source is not \"unknown\"\naccepted = False   # <- fix this line\n\nif accepted:\n    print(\"ACCEPT\")\nelse:\n    print(\"DROP\")\n",
+      "solution": "accepted = 64 <= packet_size <= 1500 and checksum_ok and source != \"unknown\"\n\nif accepted:\n    print(\"ACCEPT\")\nelse:\n    print(\"DROP\")\n",
+      "scenarios": [
+        { "id": "ok", "label": "512 bytes, checksum ok, from sat-7", "inputs": { "packet_size": 512, "checksum_ok": true, "source": "sat-7" } },
+        { "id": "small", "label": "32 bytes", "inputs": { "packet_size": 32, "checksum_ok": true, "source": "sat-7" } },
+        { "id": "big", "label": "1501 bytes", "inputs": { "packet_size": 1501, "checksum_ok": true, "source": "sat-7" } },
+        { "id": "edge", "label": "exactly 64 bytes", "inputs": { "packet_size": 64, "checksum_ok": true, "source": "relay-2" } },
+        { "id": "bad", "label": "bad checksum", "inputs": { "packet_size": 512, "checksum_ok": false, "source": "sat-7" } },
+        { "id": "unk", "label": "unknown source", "inputs": { "packet_size": 512, "checksum_ok": true, "source": "unknown" } }
+      ],
+      "tests": [
+        { "id": "ok", "kind": "stdout_equals", "label": "Valid packet is accepted", "scenario": "ok", "expected": "ACCEPT" },
+        { "id": "bool", "kind": "variable_type", "label": "accepted is a bool", "scenario": "ok", "name": "accepted", "expected": "bool" },
+        { "id": "small", "kind": "stdout_equals", "label": "Too small → DROP", "scenario": "small", "expected": "DROP" },
+        { "id": "big", "kind": "stdout_equals", "label": "Too big → DROP", "scenario": "big", "expected": "DROP" },
+        { "id": "edge", "kind": "stdout_equals", "label": "64 bytes is allowed", "scenario": "edge", "expected": "ACCEPT", "failHint": "Inclusive means <= and >=, not < and >." },
+        { "id": "bad", "kind": "stdout_equals", "label": "Bad checksum → DROP", "scenario": "bad", "expected": "DROP" },
+        { "id": "unk", "kind": "stdout_equals", "label": "Unknown source → DROP", "scenario": "unk", "expected": "DROP", "hidden": true }
+      ],
+      "hints": [
+        "and is True only when both sides are True.",
+        "Python lets you chain comparisons: 64 <= packet_size <= 1500",
+        "\"Is not\" for values is written != (e.g. source != \"unknown\")."
+      ],
+      "careers": {
+        "dataScience": "Boolean masks: `df[(df.size >= 64) & (df.ok)]` filters rows with exactly this logic.",
+        "softwareEngineering": "Guard clauses and input validation combine several conditions before doing any real work.",
+        "webDevelopment": "Authorization checks: is the user logged in AND the owner AND not banned?"
+      }
+    },
+    {
+      "id": "w2-l3",
+      "world": 2,
+      "order": 3,
+      "mechanic": "predict_output",
+      "title": "Security Clearance",
+      "concept": "Operator precedence of and / or / not",
+      "tags": ["and", "or", "not", "precedence"],
+      "xp": 75,
+      "briefing": "An intruder slipped past the checkpoint using a maintenance override. Trace the checkpoint logic to see what it printed.",
+      "objective": "What does this program print?",
+      "snippet": "clearance = 3\nhas_badge = False\noverride = True\n\nif clearance >= 3 and has_badge or override:\n    print(\"ACCESS GRANTED\")\nelif not has_badge:\n    print(\"BADGE REQUIRED\")\nelse:\n    print(\"ACCESS DENIED\")\n",
+      "choices": ["ACCESS GRANTED", "BADGE REQUIRED", "ACCESS DENIED", "Nothing is printed"],
+      "answerIndex": 0,
+      "explanation": "and binds tighter than or, so the condition reads (clearance >= 3 and has_badge) or override → (True and False) or True → False or True → True. The first branch runs. Add parentheses when mixing and/or so the intent is obvious.",
+      "hints": [
+        "Evaluate and before or — like * before +.",
+        "Group it as (clearance >= 3 and has_badge) or override."
+      ],
+      "careers": {
+        "dataScience": "Mis-grouped filters silently include the wrong rows. Parenthesize compound masks.",
+        "softwareEngineering": "Precedence bugs in permission checks are real security vulnerabilities. Code review catches them; tests prove them.",
+        "webDevelopment": "Access-control middleware is exactly this logic. An accidental `or` can open an admin route."
+      }
+    },
+    {
+      "id": "w2-l4",
+      "world": 2,
+      "order": 4,
+      "mechanic": "live_console",
+      "title": "Threat Level",
+      "concept": "Ordered elif ladders with not",
+      "tags": ["if", "elif", "else", "not"],
+      "xp": 100,
+      "briefing": "The perimeter grid scores threats from 0 to 100. Build the alert classifier. If the sensors are offline, nothing else can be trusted.",
+      "objective": "Set alert to OFFLINE / RED / AMBER / GREEN by the rules, then print: ALERT: <alert>",
+      "starterCode": "# Sensor inputs: threat_score (0-100), sensors_online (bool)\n# Rules, checked in this order:\n#   sensors offline     -> \"OFFLINE\"\n#   score 70 or higher  -> \"RED\"\n#   score 30 or higher  -> \"AMBER\"\n#   anything else       -> \"GREEN\"\n# Store the result in alert, then print:  ALERT: <alert>\n\n",
+      "solution": "if not sensors_online:\n    alert = \"OFFLINE\"\nelif threat_score >= 70:\n    alert = \"RED\"\nelif threat_score >= 30:\n    alert = \"AMBER\"\nelse:\n    alert = \"GREEN\"\nprint(f\"ALERT: {alert}\")\n",
+      "scenarios": [
+        { "id": "s0", "label": "score 0", "inputs": { "threat_score": 0, "sensors_online": true } },
+        { "id": "s29", "label": "score 29", "inputs": { "threat_score": 29, "sensors_online": true } },
+        { "id": "s30", "label": "score 30", "inputs": { "threat_score": 30, "sensors_online": true } },
+        { "id": "s69", "label": "score 69", "inputs": { "threat_score": 69, "sensors_online": true } },
+        { "id": "s70", "label": "score 70", "inputs": { "threat_score": 70, "sensors_online": true } },
+        { "id": "off", "label": "score 90, sensors offline", "inputs": { "threat_score": 90, "sensors_online": false } }
+      ],
+      "tests": [
+        { "id": "s0", "kind": "stdout_equals", "label": "0 → GREEN", "scenario": "s0", "expected": "ALERT: GREEN" },
+        { "id": "s29", "kind": "stdout_equals", "label": "29 → GREEN", "scenario": "s29", "expected": "ALERT: GREEN" },
+        { "id": "s30", "kind": "stdout_equals", "label": "30 → AMBER", "scenario": "s30", "expected": "ALERT: AMBER" },
+        { "id": "s69", "kind": "stdout_equals", "label": "69 → AMBER", "scenario": "s69", "expected": "ALERT: AMBER" },
+        { "id": "s70", "kind": "stdout_equals", "label": "70 → RED", "scenario": "s70", "expected": "ALERT: RED", "failHint": "Check RED before AMBER — 70 is also >= 30." },
+        { "id": "off", "kind": "stdout_equals", "label": "Offline overrides everything", "scenario": "off", "expected": "ALERT: OFFLINE", "hidden": true }
+      ],
+      "hints": [
+        "Order matters: the first True branch wins, so test the most specific rule first.",
+        "not sensors_online is True when the sensors are offline.",
+        "Shape: if ... / elif ... / elif ... / else."
+      ],
+      "careers": {
+        "dataScience": "Rule-based labelling (risk tiers, customer segments) is often the baseline a model has to beat.",
+        "softwareEngineering": "Alert severities in monitoring tools like PagerDuty follow ordered threshold rules exactly like this.",
+        "webDevelopment": "Rendering status badges (success / warning / danger) from a numeric score."
+      }
+    },
+
+    {
+      "id": "w3-l1",
+      "world": 3,
+      "order": 1,
+      "mechanic": "code_repair",
+      "title": "Payload Parser",
+      "concept": "List indexing & slicing",
+      "tags": ["lists", "indexing", "slicing", "negative index"],
+      "xp": 100,
+      "briefing": "Sensor readings arrive as a list, oldest first. The parser needs the first reading, the latest one, and the three most recent — and lists come in all lengths.",
+      "objective": "Fill in the indexes so the parser works for a list of any length.",
+      "template": "first = readings[{{first}}]\nlatest = readings[{{last}}]\nrecent = readings[{{tail}}]\nprint(\"first:\", first, \"| latest:\", latest, \"| recent:\", recent)\n",
+      "blanks": [
+        { "id": "first", "answers": ["0"] },
+        { "id": "last", "answers": ["-1"] },
+        { "id": "tail", "answers": ["-3:"] }
+      ],
+      "tokenBank": ["0", "1", "-1", "4", "-3:", ":3", "3:", "len(readings)"],
+      "scenarios": [
+        { "id": "five", "label": "5 readings", "inputs": { "readings": [12.5, 13.1, 12.9, 14.2, 15.0] } },
+        { "id": "seven", "label": "7 readings", "inputs": { "readings": [1, 2, 3, 4, 5, 6, 7] } }
+      ],
+      "tests": [
+        { "id": "first", "kind": "variable_equals", "label": "first is the oldest reading", "scenario": "five", "name": "first", "expected": 12.5 },
+        { "id": "latest", "kind": "variable_equals", "label": "latest is the newest reading", "scenario": "five", "name": "latest", "expected": 15.0 },
+        { "id": "recent", "kind": "variable_equals", "label": "recent is the last three", "scenario": "five", "name": "recent", "expected": [12.9, 14.2, 15.0] },
+        { "id": "latest7", "kind": "variable_equals", "label": "latest works for 7 readings", "scenario": "seven", "name": "latest", "expected": 7, "failHint": "Hard-coded positions break when the list grows. Negative indexes count from the end." },
+        { "id": "recent7", "kind": "variable_equals", "label": "recent works for 7 readings", "scenario": "seven", "name": "recent", "expected": [5, 6, 7] }
+      ],
+      "hints": [
+        "Indexes start at 0, so the first item is readings[0].",
+        "Negative indexes count from the end: readings[-1] is the last item.",
+        "A slice readings[-3:] means \"from the third-from-last to the end\"."
+      ],
+      "careers": {
+        "dataScience": "`df.head()`, `df.tail(3)` and `series.iloc[-1]` are indexing and slicing on steroids.",
+        "softwareEngineering": "Ring buffers, log tails and pagination all rely on slicing the most recent N items.",
+        "webDevelopment": "\"Show the 3 latest posts\" is posts[-3:] (or a LIMIT in SQL)."
+      }
+    },
+    {
+      "id": "w3-l2",
+      "world": 3,
+      "order": 2,
+      "mechanic": "live_console",
+      "title": "Entity Records",
+      "concept": "Dictionaries: lookup, update, .get()",
+      "tags": ["dicts", "key lookup", "get"],
+      "xp": 100,
+      "briefing": "An operator record has landed in the vault as a dictionary. Read it, promote the operator to admin, flag them active, and safely read an email that may not exist.",
+      "objective": "username = the name, set role to \"admin\", add active = True, email = the email or \"none\" if missing, then print: <username> -> <role>",
+      "starterCode": "# Sensor input: user (a dict), e.g. {\"id\": 7, \"name\": \"ada\", \"role\": \"analyst\"}\n# 1. username = the user's name\n# 2. change the user's role to \"admin\"\n# 3. add a key \"active\" with the value True\n# 4. email = the user's email, or \"none\" if there isn't one (no crashing!)\n# 5. print:  <username> -> <role>\n\n",
+      "solution": "username = user[\"name\"]\nuser[\"role\"] = \"admin\"\nuser[\"active\"] = True\nemail = user.get(\"email\", \"none\")\nprint(f\"{username} -> {user['role']}\")\n",
+      "scenarios": [
+        { "id": "ada", "label": "ada (no email)", "inputs": { "user": { "id": 7, "name": "ada", "role": "analyst" } } },
+        { "id": "linus", "label": "linus (has email)", "inputs": { "user": { "id": 12, "name": "linus", "role": "dev", "email": "linus@grid.io" } } }
+      ],
+      "tests": [
+        { "id": "name", "kind": "variable_equals", "label": "username is \"ada\"", "scenario": "ada", "name": "username", "expected": "ada" },
+        { "id": "record", "kind": "variable_equals", "label": "user is promoted and active", "scenario": "ada", "name": "user", "expected": { "id": 7, "name": "ada", "role": "admin", "active": true } },
+        { "id": "email-missing", "kind": "variable_equals", "label": "Missing email becomes \"none\"", "scenario": "ada", "name": "email", "expected": "none", "failHint": "user[\"email\"] crashes when the key is missing. .get() takes a fallback." },
+        { "id": "out", "kind": "stdout_equals", "label": "Prints \"ada -> admin\"", "scenario": "ada", "expected": "ada -> admin" },
+        { "id": "email-present", "kind": "variable_equals", "label": "Existing email is kept", "scenario": "linus", "name": "email", "expected": "linus@grid.io", "hidden": true }
+      ],
+      "hints": [
+        "Read a value with d[\"key\"]; write one with d[\"key\"] = value.",
+        "Assigning to a key that doesn't exist yet adds it.",
+        "d.get(\"key\", fallback) returns fallback instead of raising KeyError."
+      ],
+      "careers": {
+        "dataScience": "JSON records from APIs become dicts; a list of dicts becomes a DataFrame with `pd.DataFrame(records)`.",
+        "softwareEngineering": "Dicts are Python's hash maps: caches, lookup tables and config objects are all dicts.",
+        "webDevelopment": "Request bodies and JSON responses are dicts. `.get()` with a default stops optional fields from crashing your API."
+      }
+    },
+    {
+      "id": "w3-l3",
+      "world": 3,
+      "order": 3,
+      "mechanic": "predict_output",
+      "title": "Sector Scan",
+      "concept": "Tuples vs sets",
+      "tags": ["tuples", "sets", "len", "count"],
+      "xp": 100,
+      "briefing": "A scanner logged the sectors it swept as a tuple. Analytics converted it to a set. Predict the report line.",
+      "objective": "What does this program print?",
+      "snippet": "sweep = (3, 7, 3, 9)\nunique = set(sweep)\nprint(len(sweep), len(unique), sweep.count(3))\n",
+      "choices": ["4 3 2", "4 4 2", "3 3 1", "4 3 1"],
+      "answerIndex": 0,
+      "explanation": "A tuple keeps every item in order, duplicates included, so len(sweep) is 4 and sweep.count(3) is 2. A set keeps only unique values — {3, 7, 9} — so len(unique) is 3.",
+      "hints": [
+        "Tuples keep duplicates. Sets drop them.",
+        ".count(x) counts how many times x appears."
+      ],
+      "careers": {
+        "dataScience": "`series.nunique()` and `value_counts()` are set and count logic for whole columns.",
+        "softwareEngineering": "Tuples are immutable records (great dict keys). Sets give O(1) membership tests for de-duplication.",
+        "webDevelopment": "De-duplicating tags, or checking whether a permission is in a user's set of roles."
+      }
+    },
+    {
+      "id": "w3-l4",
+      "world": 3,
+      "order": 4,
+      "mechanic": "live_console",
+      "title": "Sensor Dedup",
+      "concept": "Set operations & tuples",
+      "tags": ["sets", "intersection", "union", "tuples"],
+      "xp": 125,
+      "briefing": "Two monitoring stations sent overlapping sensor logs, with duplicates. Find which sensors both stations saw, the full roster, and pack a summary tuple.",
+      "objective": "shared = sensors in both logs, all_ids = sensors in either, report = (number shared, number total). Print: <total> unique sensors, <shared> shared",
+      "starterCode": "# Sensor inputs: log_a, log_b (lists of sensor ids, may contain duplicates)\n# shared  -> a set of ids that appear in BOTH logs\n# all_ids -> a set of ids that appear in EITHER log\n# report  -> a tuple: (how many shared, how many in total)\n# print:  <total> unique sensors, <shared> shared\n\n",
+      "solution": "shared = set(log_a) & set(log_b)\nall_ids = set(log_a) | set(log_b)\nreport = (len(shared), len(all_ids))\nprint(f\"{report[1]} unique sensors, {report[0]} shared\")\n",
+      "scenarios": [
+        { "id": "a", "label": "overlapping logs", "inputs": { "log_a": ["s1", "s2", "s3", "s7", "s2"], "log_b": ["s2", "s3", "s9"] } },
+        { "id": "b", "label": "no overlap", "inputs": { "log_a": ["x1"], "log_b": ["x2", "x3", "x3"] } }
+      ],
+      "tests": [
+        { "id": "shared-type", "kind": "variable_type", "label": "shared is a set", "scenario": "a", "name": "shared", "expected": "set" },
+        { "id": "shared", "kind": "variable_equals", "label": "shared = {s2, s3}", "scenario": "a", "name": "shared", "expected": ["s2", "s3"] },
+        { "id": "all", "kind": "variable_equals", "label": "all_ids has 5 sensors", "scenario": "a", "name": "all_ids", "expected": ["s1", "s2", "s3", "s7", "s9"] },
+        { "id": "report-type", "kind": "variable_type", "label": "report is a tuple", "scenario": "a", "name": "report", "expected": "tuple" },
+        { "id": "out", "kind": "stdout_equals", "label": "Prints the summary", "scenario": "a", "expected": "5 unique sensors, 2 shared" },
+        { "id": "none", "kind": "stdout_equals", "label": "Handles logs with nothing in common", "scenario": "b", "expected": "3 unique sensors, 0 shared", "hidden": true }
+      ],
+      "hints": [
+        "set(some_list) removes duplicates.",
+        "a & b is the intersection (in both); a | b is the union (in either).",
+        "A tuple is written with parentheses: (x, y)."
+      ],
+      "careers": {
+        "dataScience": "Comparing ID sets is how you check join coverage between two datasets before merging.",
+        "softwareEngineering": "Diffing two inventories (deployed vs desired services) is set algebra.",
+        "webDevelopment": "Mutual followers, shared tags, or permissions common to two roles — intersection again."
+      }
+    },
+
+    {
+      "id": "w4-l1",
+      "world": 4,
+      "order": 1,
+      "mechanic": "live_console",
+      "title": "Batch Processor",
+      "concept": "for loops & accumulators",
+      "tags": ["for", "accumulator", "lists"],
+      "xp": 125,
+      "briefing": "A batch of transaction records needs totalling. The fancy sum() module is offline — build the accumulator loop by hand.",
+      "objective": "Loop over records, add each one to total and count how many there are. Don't use sum().",
+      "starterCode": "# Sensor input: records (a list of numbers)\ntotal = 0\ncount = 0\n# Loop over records: add each one to total, and count them.\n\nprint(f\"Processed {count} records, total {total}\")\n",
+      "solution": "total = 0\ncount = 0\nfor record in records:\n    total += record\n    count += 1\nprint(f\"Processed {count} records, total {total}\")\n",
+      "scenarios": [
+        { "id": "a", "label": "4 records", "inputs": { "records": [120, 340, 75, 610] } },
+        { "id": "b", "label": "1 record", "inputs": { "records": [5] } },
+        { "id": "empty", "label": "empty batch", "inputs": { "records": [] } }
+      ],
+      "tests": [
+        { "id": "for", "kind": "code_matches", "label": "Uses a for loop", "pattern": "\\bfor\\b" },
+        { "id": "nosum", "kind": "code_not_matches", "label": "Doesn't call sum()", "pattern": "\\bsum\\s*\\(" },
+        { "id": "total", "kind": "variable_equals", "label": "total is 1145", "scenario": "a", "name": "total", "expected": 1145 },
+        { "id": "out", "kind": "stdout_equals", "label": "Prints the batch summary", "scenario": "a", "expected": "Processed 4 records, total 1145" },
+        { "id": "one", "kind": "stdout_equals", "label": "Single-record batch", "scenario": "b", "expected": "Processed 1 records, total 5" },
+        { "id": "empty", "kind": "stdout_equals", "label": "Empty batch", "scenario": "empty", "expected": "Processed 0 records, total 0", "hidden": true }
+      ],
+      "hints": [
+        "for record in records: runs the indented block once per item.",
+        "Inside the loop: total += record adds to the running total.",
+        "count += 1 inside the loop counts iterations."
+      ],
+      "careers": {
+        "dataScience": "Accumulators are what `.sum()`, `.mean()` and `groupby().agg()` do under the hood — and how you write custom aggregations.",
+        "softwareEngineering": "Processing queues, files and streams one item at a time is the backbone of ETL jobs and workers.",
+        "webDevelopment": "Computing a cart total or rendering a list of items means looping over a collection."
+      }
+    },
+    {
+      "id": "w4-l2",
+      "world": 4,
+      "order": 2,
+      "mechanic": "code_repair",
+      "title": "Retry Mechanism",
+      "concept": "while loops with a guard",
+      "tags": ["while", "not", "augmented assignment"],
+      "xp": 125,
+      "briefing": "The uplink is flaky. Keep retrying until it connects, but give up after 5 attempts. Careful: a broken counter loops forever and overheats the core.",
+      "objective": "Repair the retry loop. The link succeeds on attempt number success_on.",
+      "template": "attempts = 0\nconnected = False\nwhile {{not_kw}} connected and attempts < 5:\n    attempts {{inc}} 1\n    if attempts == success_on:\n        connected = True\nprint(\"attempts:\", attempts, \"connected:\", connected)\n",
+      "blanks": [
+        { "id": "not_kw", "answers": ["not"] },
+        { "id": "inc", "answers": ["+="] }
+      ],
+      "tokenBank": ["not", "!", "+=", "=", "==", "-="],
+      "scenarios": [
+        { "id": "third", "label": "connects on attempt 3", "inputs": { "success_on": 3 } },
+        { "id": "first", "label": "connects on attempt 1", "inputs": { "success_on": 1 } },
+        { "id": "never", "label": "never connects", "inputs": { "success_on": 9 } }
+      ],
+      "tests": [
+        { "id": "third", "kind": "stdout_equals", "label": "Connects on the 3rd try", "scenario": "third", "expected": "attempts: 3 connected: True" },
+        { "id": "first", "kind": "stdout_equals", "label": "Connects on the 1st try", "scenario": "first", "expected": "attempts: 1 connected: True" },
+        { "id": "never", "kind": "stdout_equals", "label": "Gives up after 5 attempts", "scenario": "never", "expected": "attempts: 5 connected: False", "failHint": "The loop must stop when attempts reaches 5." }
+      ],
+      "hints": [
+        "The loop should keep going while we are NOT connected.",
+        "attempts = 1 sets it to 1 every time — the loop never progresses. You need to add to it.",
+        "x += 1 is shorthand for x = x + 1."
+      ],
+      "careers": {
+        "dataScience": "Training loops run while the loss is still improving and epochs < max — the same guard pattern.",
+        "softwareEngineering": "Retry-with-limit (plus backoff) is standard for network calls; libraries like tenacity wrap exactly this loop.",
+        "webDevelopment": "Polling an API until a job finishes, with a max-attempts cap so the page never hangs."
+      }
+    },
+    {
+      "id": "w4-l3",
+      "world": 4,
+      "order": 3,
+      "mechanic": "predict_output",
+      "title": "Signal Skipper",
+      "concept": "range(), continue and break",
+      "tags": ["range", "continue", "break", "modulo"],
+      "xp": 125,
+      "briefing": "A filter engine skips even channel codes and shuts down when codes get too high. Predict which channels get broadcast.",
+      "objective": "What does this program print?",
+      "snippet": "for code in range(1, 8):\n    if code % 2 == 0:\n        continue\n    if code > 5:\n        break\n    print(code, end=\" \")\n",
+      "choices": ["1 3 5", "1 2 3 4 5", "1 3 5 7", "2 4 6"],
+      "answerIndex": 0,
+      "explanation": "range(1, 8) yields 1–7. Even codes hit continue and are skipped. Odd codes 1, 3 and 5 are printed. At 7, code > 5 triggers break, so 7 is never printed.",
+      "hints": [
+        "range(1, 8) stops BEFORE 8.",
+        "continue jumps to the next iteration; break exits the loop entirely."
+      ],
+      "careers": {
+        "dataScience": "Skipping invalid rows (continue) and early stopping (break) are everyday patterns in data-cleaning loops.",
+        "softwareEngineering": "Short-circuiting a search loop with break as soon as you find a match saves work.",
+        "webDevelopment": "Skipping hidden items while rendering, or stopping pagination at the first empty page."
+      }
+    },
+    {
+      "id": "w4-l4",
+      "world": 4,
+      "order": 4,
+      "mechanic": "live_console",
+      "title": "Error Sweep",
+      "concept": "Loops + conditions + list building",
+      "tags": ["for", "break", "startswith", "append", "slicing"],
+      "xp": 150,
+      "briefing": "The system log is a list of entries. Collect the code of every ERROR entry, but stop the sweep the moment you hit HALT — everything after it is corrupted.",
+      "objective": "Fill errors with the codes after \"ERROR:\" (e.g. \"ERROR:disk\" → \"disk\"), stopping at \"HALT\". Use break.",
+      "starterCode": "# Sensor input: logs (a list of strings)\nerrors = []\nfor entry in logs:\n    # 1. If entry is \"HALT\", stop the sweep immediately.\n    # 2. If entry starts with \"ERROR:\", store the code after the colon.\n    #    e.g. \"ERROR:disk\" -> \"disk\"\n    pass\n\nprint(f\"{len(errors)} errors found\")\n",
+      "solution": "errors = []\nfor entry in logs:\n    if entry == \"HALT\":\n        break\n    if entry.startswith(\"ERROR:\"):\n        errors.append(entry[6:])\n\nprint(f\"{len(errors)} errors found\")\n",
+      "scenarios": [
+        { "id": "a", "label": "mixed log with HALT", "inputs": { "logs": ["OK", "ERROR:disk", "OK", "ERROR:net", "HALT", "ERROR:ghost"] } },
+        { "id": "clean", "label": "clean log", "inputs": { "logs": ["OK", "OK"] } },
+        { "id": "one", "label": "single error", "inputs": { "logs": ["ERROR:cpu"] } },
+        { "id": "halt", "label": "HALT first", "inputs": { "logs": ["HALT", "ERROR:x"] } }
+      ],
+      "tests": [
+        { "id": "break", "kind": "code_matches", "label": "Uses break", "pattern": "\\bbreak\\b" },
+        { "id": "codes", "kind": "variable_equals", "label": "errors = [\"disk\", \"net\"]", "scenario": "a", "name": "errors", "expected": ["disk", "net"], "failHint": "Did you stop at HALT? \"ghost\" comes after it." },
+        { "id": "out", "kind": "stdout_equals", "label": "Prints \"2 errors found\"", "scenario": "a", "expected": "2 errors found" },
+        { "id": "clean", "kind": "variable_equals", "label": "Clean log has no errors", "scenario": "clean", "name": "errors", "expected": [] },
+        { "id": "one", "kind": "variable_equals", "label": "Single error collected", "scenario": "one", "name": "errors", "expected": ["cpu"] },
+        { "id": "halt", "kind": "variable_equals", "label": "HALT first stops immediately", "scenario": "halt", "name": "errors", "expected": [], "hidden": true }
+      ],
+      "hints": [
+        "Check for HALT first and break out of the loop.",
+        "entry.startswith(\"ERROR:\") tells you whether it is an error entry.",
+        "\"ERROR:\" is 6 characters, so entry[6:] is everything after it. Then errors.append(...)."
+      ],
+      "careers": {
+        "dataScience": "Parsing raw logs into structured fields is the first step of most real-world data pipelines.",
+        "softwareEngineering": "Log scanners and incident tooling filter, extract and stop at sentinel markers just like this.",
+        "webDevelopment": "Parsing access logs to find failed requests, or processing a stream until an end-of-stream marker."
+      }
+    },
+
+    {
+      "id": "w5-l1",
+      "world": 5,
+      "order": 1,
+      "mechanic": "code_repair",
+      "title": "Engine Module",
+      "concept": "def and return",
+      "tags": ["def", "return", "parameters"],
+      "xp": 150,
+      "briefing": "The thrust calculation is copy-pasted all over the grid. Package it as a reusable module — but the module's keywords got scrambled.",
+      "objective": "Repair the function so calculate_thrust(mass, acceleration) hands back mass × acceleration.",
+      "template": "{{def_kw}} calculate_thrust(mass, acceleration):\n    force = mass * acceleration\n    {{ret_kw}} force\n\nprint(calculate_thrust(1200, 10))\n",
+      "blanks": [
+        { "id": "def_kw", "answers": ["def"] },
+        { "id": "ret_kw", "answers": ["return"] }
+      ],
+      "tokenBank": ["def", "return", "print", "function", "yield", "func"],
+      "tests": [
+        { "id": "out", "kind": "stdout_equals", "label": "Prints 12000", "expected": "12000", "failHint": "print shows a value but doesn't hand it back — the caller gets None." },
+        { "id": "small", "kind": "expression_equals", "label": "calculate_thrust(10, 2) returns 20", "expr": "calculate_thrust(10, 2)", "expected": 20 },
+        { "id": "zero", "kind": "expression_equals", "label": "calculate_thrust(0, 99) returns 0", "expr": "calculate_thrust(0, 99)", "expected": 0, "hidden": true }
+      ],
+      "hints": [
+        "Functions are defined with the def keyword.",
+        "return sends a value back to whoever called the function. print only displays it."
+      ],
+      "careers": {
+        "dataScience": "Reusable functions turn one-off notebook cells into a feature pipeline you can apply to every dataset.",
+        "softwareEngineering": "Functions are the smallest unit of reuse and testing. Pure functions (input → return) are easiest to test.",
+        "webDevelopment": "Every route handler and template helper is a function that returns a response or a value."
+      }
+    },
+    {
+      "id": "w5-l2",
+      "world": 5,
+      "order": 2,
+      "mechanic": "live_console",
+      "title": "Response Handler",
+      "concept": "Default parameters & returning dicts",
+      "tags": ["def", "default parameters", "None", "dicts"],
+      "xp": 150,
+      "briefing": "Every API on the grid must reply in the same envelope. Build the handler that wraps a status code and optional data into a standard response.",
+      "objective": "build_response(status, data=None) returns {\"status\": status, \"ok\": status < 400, \"data\": data}, using {} when no data is given.",
+      "starterCode": "# build_response(status, data=None) must RETURN a dict:\n#   {\"status\": status, \"ok\": <True if status < 400>, \"data\": data}\n# If data was not given (it is None), use an empty dict {} instead.\n\ndef build_response(status, data=None):\n    pass\n\nprint(build_response(404))\n",
+      "solution": "def build_response(status, data=None):\n    if data is None:\n        data = {}\n    return {\"status\": status, \"ok\": status < 400, \"data\": data}\n\nprint(build_response(404))\n",
+      "tests": [
+        { "id": "ok", "kind": "expression_equals", "label": "200 with data", "expr": "build_response(200, {\"id\": 1})", "expected": { "status": 200, "ok": true, "data": { "id": 1 } } },
+        { "id": "missing", "kind": "expression_equals", "label": "404 with no data → empty dict", "expr": "build_response(404)", "expected": { "status": 404, "ok": false, "data": {} } },
+        { "id": "error", "kind": "expression_equals", "label": "500 is not ok", "expr": "build_response(500)[\"ok\"]", "expected": false },
+        { "id": "edge", "kind": "expression_equals", "label": "399 is still ok", "expr": "build_response(399)[\"ok\"]", "expected": true },
+        { "id": "empty-list", "kind": "expression_equals", "label": "An empty list is still data", "expr": "build_response(201, [])", "expected": { "status": 201, "ok": true, "data": [] }, "hidden": true, "failHint": "`data or {}` replaces ANY falsy value, including []. Check `data is None` instead." }
+      ],
+      "hints": [
+        "A default parameter (data=None) is used when the caller leaves that argument out.",
+        "Use `if data is None:` to detect a missing argument.",
+        "status < 400 is already a bool — you can put it straight into the dict."
+      ],
+      "careers": {
+        "dataScience": "Model-serving endpoints wrap predictions in a consistent envelope so dashboards can parse them.",
+        "softwareEngineering": "`None` as a default (never a mutable `{}` or `[]`) avoids the infamous shared-default bug.",
+        "webDevelopment": "This is the JSON envelope pattern used by REST APIs in Flask, FastAPI and Django."
+      }
+    },
+    {
+      "id": "w5-l3",
+      "world": 5,
+      "order": 3,
+      "mechanic": "predict_output",
+      "title": "Scope Leak",
+      "concept": "Local vs global scope",
+      "tags": ["scope", "local", "global"],
+      "xp": 150,
+      "briefing": "A module tried to overclock the global power setting from inside a function. Did it actually change? Predict the output.",
+      "objective": "What does this program print?",
+      "snippet": "power = 10\n\ndef boost():\n    power = 99\n    return power + 1\n\nresult = boost()\nprint(result, power)\n",
+      "choices": ["100 10", "100 99", "11 10", "UnboundLocalError"],
+      "answerIndex": 0,
+      "explanation": "Assigning power = 99 inside boost() creates a NEW local variable that only exists inside the function. boost() returns 99 + 1 = 100, and the global power is untouched at 10. Functions should communicate through parameters and return values, not by changing globals.",
+      "hints": [
+        "An assignment inside a function creates a local variable by default.",
+        "The global power and the local power are two different variables that share a name."
+      ],
+      "careers": {
+        "dataScience": "Notebook globals cause 'works on my machine' bugs. Pass data into functions explicitly.",
+        "softwareEngineering": "Avoiding shared mutable global state makes code testable and thread-safe.",
+        "webDevelopment": "Request handlers must not keep per-user data in module globals — it leaks between users."
+      }
+    },
+    {
+      "id": "w5-l4",
+      "world": 5,
+      "order": 4,
+      "mechanic": "live_console",
+      "title": "API Gatekeeper",
+      "concept": "Capstone: functions + dicts + logic",
+      "tags": ["def", "default parameters", "dicts", "isinstance", "lists"],
+      "xp": 200,
+      "briefing": "Final system: the sign-up API needs a validator module. It must return every problem it finds, in a fixed order, so the client can show them all at once.",
+      "objective": "validate_user(payload, strict=False) returns a list of error strings in this order: \"invalid email\", \"invalid age\", \"missing name\" (strict only). Return [] when valid.",
+      "starterCode": "# validate_user(payload, strict=False) -> list of error strings, in this order:\n#   \"invalid email\" if \"email\" is missing or has no \"@\" in it\n#   \"invalid age\"   if \"age\" is missing, not an int, or under 13\n#   \"missing name\"  ONLY when strict is True and \"name\" is missing\n# Return an empty list when everything is valid.\n\ndef validate_user(payload, strict=False):\n    errors = []\n    return errors\n\nprint(validate_user({\"email\": \"neo@grid.io\", \"age\": 9}))\n",
+      "solution": "def validate_user(payload, strict=False):\n    errors = []\n    if \"@\" not in payload.get(\"email\", \"\"):\n        errors.append(\"invalid email\")\n    age = payload.get(\"age\")\n    if not isinstance(age, int) or age < 13:\n        errors.append(\"invalid age\")\n    if strict and \"name\" not in payload:\n        errors.append(\"missing name\")\n    return errors\n\nprint(validate_user({\"email\": \"neo@grid.io\", \"age\": 9}))\n",
+      "tests": [
+        { "id": "valid", "kind": "expression_equals", "label": "Valid payload → []", "expr": "validate_user({\"email\": \"a@b.io\", \"age\": 30})", "expected": [] },
+        { "id": "bad-email", "kind": "expression_equals", "label": "Email without @", "expr": "validate_user({\"email\": \"nope\", \"age\": 30})", "expected": ["invalid email"] },
+        { "id": "no-email", "kind": "expression_equals", "label": "Missing email doesn't crash", "expr": "validate_user({\"age\": 30})", "expected": ["invalid email"], "failHint": "payload[\"email\"] raises KeyError when it's missing — use .get() with a default." },
+        { "id": "young", "kind": "expression_equals", "label": "Age under 13", "expr": "validate_user({\"email\": \"a@b.io\", \"age\": 9})", "expected": ["invalid age"] },
+        { "id": "str-age", "kind": "expression_equals", "label": "Age sent as text", "expr": "validate_user({\"email\": \"a@b.io\", \"age\": \"30\"})", "expected": ["invalid age"], "failHint": "isinstance(age, int) checks the type before you compare." },
+        { "id": "strict", "kind": "expression_equals", "label": "strict=True requires a name", "expr": "validate_user({\"email\": \"a@b.io\", \"age\": 30}, strict=True)", "expected": ["missing name"] },
+        { "id": "strict-ok", "kind": "expression_equals", "label": "strict=True with a name", "expr": "validate_user({\"name\": \"Ada\", \"email\": \"a@b.io\", \"age\": 30}, strict=True)", "expected": [] },
+        { "id": "all", "kind": "expression_equals", "label": "Reports every problem, in order", "expr": "validate_user({}, True)", "expected": ["invalid email", "invalid age", "missing name"], "hidden": true }
+      ],
+      "hints": [
+        "Use independent if statements (not elif) — you want to collect ALL errors.",
+        "payload.get(\"email\", \"\") gives an empty string when the key is missing, and \"@\" not in \"\" is True.",
+        "isinstance(age, int) is False for None and for \"30\" — check it before comparing with 13."
+      ],
+      "careers": {
+        "dataScience": "Data-quality checks (schema, ranges, required fields) run before any analysis — tools like Great Expectations formalize them.",
+        "softwareEngineering": "Collecting all validation errors at once is better UX and easier to test than failing on the first one.",
+        "webDevelopment": "This is what Pydantic and Django forms do for every request body: typed fields, defaults and error lists."
+      }
+    }
+  ]
+}

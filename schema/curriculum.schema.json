@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pyquest.dev/schema/curriculum.schema.json",
+  "title": "PyQuest curriculum",
+  "description": "Worlds and levels for PyQuest. Levels are a discriminated union on `mechanic`. Validation of player code is behavioural: tests run the program (once per scenario) and inspect stdout, variables and expression probes.",
+  "type": "object",
+  "required": ["version", "worlds", "levels"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "worlds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/world" } },
+    "levels": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/level" } }
+  },
+  "$defs": {
+    "world": {
+      "type": "object",
+      "required": ["id", "codename", "title", "concepts", "theme", "accent"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer", "minimum": 1 },
+        "codename": { "type": "string", "description": "Stylised world name, e.g. CORE TELEMETRY" },
+        "title": { "type": "string", "description": "Plain concept title, e.g. Data Types & Variables" },
+        "concepts": { "type": "array", "items": { "type": "string" } },
+        "theme": { "type": "string" },
+        "accent": { "enum": ["cyan", "emerald", "amber", "magenta", "violet"] }
+      }
+    },
+
+    "careers": {
+      "type": "object",
+      "description": "How this concept shows up in each career track (rendered in the Career Path Codex).",
+      "required": ["dataScience", "softwareEngineering", "webDevelopment"],
+      "additionalProperties": false,
+      "properties": {
+        "dataScience": { "type": "string" },
+        "softwareEngineering": { "type": "string" },
+        "webDevelopment": { "type": "string" }
+      }
+    },
+
+    "levelBase": {
+      "type": "object",
+      "required": ["id", "world", "order", "mechanic", "title", "concept", "tags", "xp", "briefing", "objective", "hints", "careers"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^w[0-9]+-l[0-9]+$" },
+        "world": { "type": "integer", "minimum": 1 },
+        "order": { "type": "integer", "minimum": 1 },
+        "mechanic": { "enum": ["code_repair", "live_console", "predict_output"] },
+        "title": { "type": "string" },
+        "concept": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "xp": { "type": "integer", "minimum": 0, "description": "XP for a 3-star clear; fewer stars award a proportional share." },
+        "briefing": { "type": "string", "description": "Story framing shown at the top of the Level HUD." },
+        "objective": { "type": "string", "description": "The concrete task, one or two sentences." },
+        "hints": { "type": "array", "minItems": 1, "items": { "type": "string" }, "description": "Revealed one at a time; each reveal costs a star." },
+        "careers": { "$ref": "#/$defs/careers" }
+      }
+    },
+
+    "scenario": {
+      "type": "object",
+      "description": "A set of sensor inputs injected as global variables before the player's code runs.",
+      "required": ["id", "label", "inputs"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "inputs": { "type": "object" }
+      }
+    },
+
+    "testCase": {
+      "type": "object",
+      "required": ["id", "kind", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "scenario": { "type": "string", "description": "Scenario id; defaults to the first scenario." },
+        "hidden": { "type": "boolean" },
+        "failHint": { "type": "string" },
+        "kind": {
+          "enum": ["stdout_equals", "stdout_contains", "variable_equals", "variable_type", "expression_equals", "no_error", "code_matches", "code_not_matches"]
+        },
+        "expected": {},
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "expr": { "type": "string" },
+        "tolerance": { "type": "number", "minimum": 0 },
+        "pattern": { "type": "string" },
+        "flags": { "type": "string" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "kind": { "enum": ["stdout_equals", "stdout_contains"] } } }, "then": { "required": ["expected"], "properties": { "expected": { "type": "string" } } } },
+        { "if": { "properties": { "kind": { "const": "variable_equals" } } }, "then": { "required": ["name", "expected"] } },
+        { "if": { "properties": { "kind": { "const": "variable_type" } } }, "then": { "required": ["name", "expected"], "properties": { "expected": { "type": "string" } } } },
+        { "if": { "properties": { "kind": { "const": "expression_equals" } } }, "then": { "required": ["expr", "expected"] } },
+        { "if": { "properties": { "kind": { "enum": ["code_matches", "code_not_matches"] } } }, "then": { "required": ["pattern"] } }
+      ]
+    },
+
+    "level": {
+      "oneOf": [
+        { "$ref": "#/$defs/codeRepairLevel" },
+        { "$ref": "#/$defs/liveConsoleLevel" },
+        { "$ref": "#/$defs/predictOutputLevel" }
+      ]
+    },
+
+    "codeRepairLevel": {
+      "allOf": [{ "$ref": "#/$defs/levelBase" }],
+      "required": ["template", "blanks", "tokenBank", "tests"],
+      "properties": {
+        "mechanic": { "const": "code_repair" },
+        "template": { "type": "string", "description": "Code containing {{blankId}} placeholders." },
+        "blanks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "answers"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^\\w+$" },
+              "answers": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+            }
+          }
+        },
+        "tokenBank": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "scenarios": { "type": "array", "items": { "$ref": "#/$defs/scenario" } },
+        "tests": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/testCase" } },
+        "id": true, "world": true, "order": true, "title": true, "concept": true, "tags": true, "xp": true,
+        "briefing": true, "objective": true, "hints": true, "careers": true
+      },
+      "additionalProperties": false
+    },
+
+    "liveConsoleLevel": {
+      "allOf": [{ "$ref": "#/$defs/levelBase" }],
+      "required": ["starterCode", "solution", "tests"],
+      "properties": {
+        "mechanic": { "const": "live_console" },
+        "starterCode": { "type": "string" },
+        "solution": { "type": "string", "description": "Reference solution. Must pass every test (enforced by verify:levels)." },
+        "scenarios": { "type": "array", "items": { "$ref": "#/$defs/scenario" } },
+        "tests": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/testCase" } },
+        "id": true, "world": true, "order": true, "title": true, "concept": true, "tags": true, "xp": true,
+        "briefing": true, "objective": true, "hints": true, "careers": true
+      },
+      "additionalProperties": false
+    },
+
+    "predictOutputLevel": {
+      "allOf": [{ "$ref": "#/$defs/levelBase" }],
+      "required": ["snippet", "choices", "answerIndex", "explanation"],
+      "properties": {
+        "mechanic": { "const": "predict_output" },
+        "snippet": { "type": "string" },
+        "choices": { "type": "array", "minItems": 2, "maxItems": 6, "items": { "type": "string" } },
+        "answerIndex": { "type": "integer", "minimum": 0 },
+        "explanation": { "type": "string" },
+        "id": true, "world": true, "order": true, "title": true, "concept": true, "tags": true, "xp": true,
+        "briefing": true, "objective": true, "hints": true, "careers": true
+      },
+      "additionalProperties": false
+    }
+  }
+}
